@@ -1,0 +1,18 @@
+name: Build HDD KeepAwake for pldmgr
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile
+        run: |
+          docker run --rm -v "$PWD:/src" shahilpatel/ps5-payload-sdk \
+          prospero-clang /src/hdd_keepawake.c -o /src/hdd_keepawake.elf -lpthread
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hdd_keepawake
+          path: hdd_keepawake.elf
