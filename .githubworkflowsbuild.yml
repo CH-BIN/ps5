@@ -1,18 +1,19 @@
-姓名: 路径
-在……之上：:
-推：:
-分支：[main]: [主要的]
-作业：:
-建立：:
-run-on:ubuntu-latest: Ubuntu-最新
-步骤：:
--使用：操作/结帐@v4uses: 操作/结帐@v4
--名称：编译名称: 编译
-运行：|: |
-Docker run--rm-v"$PWD:/src"shahilpatel/ps5-payload-sdk\
-profo-clang/src/hdd_keepawake。C-O/src/hdd_keepawake。elf-lpthread
--名称：上传工件名: 上传工件
-用法：操作/上载工件@v4: 操作/上载工件@v4
-和……一起：:
-名称：HDD_keepawake: HDD_keepawake
-路径：HDD_keepawake.elf: HDD_keepawake.elf
+name: Build HDD KeepAwake for pldmgr
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # 【重点】手动按钮触发！push失效时可以点按钮跑
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile
+        run: |
+          docker run --rm -v "$PWD:/src" ps5payload/sdk \
+          prospero-clang /src/hdd_keepawake.c -o /src/hdd_keepawake.elf -lpthread
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hdd_keepawake
+          path: hdd_keepawake.elf
