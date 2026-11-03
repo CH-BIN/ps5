@@ -5,19 +5,23 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu‑latest
+    runs-on: ubuntu-latest
     steps:
-     ‑ uses: actions/checkout@v4
-     ‑ name: checkout official ps5‑payload‑dev/sdk
-        run: git clone https://github.com/ps5‑payload‑dev/sdk.git ./ps5‑sdk
-     ‑ name: build sdk docker image locally
-        run: docker build ‑t local‑ps5‑sdk ./ps5‑sdk
-     ‑ name: compile elf
+      - uses: actions/checkout@v4
+
+      - name: checkout official ps5-payload-dev/sdk
+        run: git clone https://github.com/ps5-payload-dev/sdk.git ./ps5-sdk
+
+      - name: build sdk docker image locally
+        run: docker build -t local-ps5-sdk ./ps5-sdk
+
+      - name: compile elf
         run: |
-          docker run --rm -v "$PWD:/src" local‑ps5‑sdk \
-          prospero‑clang /src/hdd_keepawake.c ‑o /src/hdd_keepawake.elf ‑lpthread
-     ‑ name: Upload artifact
-        uses: actions/upload‑artifact@v4
+          docker run --rm -v "$PWD:/src" local-ps5-sdk \
+          prospero-clang /src/hdd_keepawake.c -o /src/hdd_keepawake.elf -lpthread
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: hdd_keepawake
           path: hdd_keepawake.elf
